@@ -50,9 +50,12 @@ See [SKILL.md](SKILL.md) for complete skill documentation and workflows.
 
 ## Standalone Installation (Without Claude Code)
 
-Make the script executable:
+Clone the repository and use the script directly:
+
 ```bash
-chmod +x chromectl.py
+git clone https://github.com/pengelbrecht/chrome-debug-skill.git
+cd chrome-debug-skill
+chmod +x scripts/chromectl.py
 ```
 
 That's it! On first run, `uv` will automatically install the required dependency (`aiohttp`).
@@ -61,29 +64,29 @@ That's it! On first run, `uv` will automatically install the required dependency
 
 1. **Launch Chrome with remote debugging:**
    ```bash
-   ./chromectl.py start --headless
+   scripts/chromectl.py start --headless
    ```
 
 2. **List all open tabs:**
    ```bash
-   ./chromectl.py list
+   scripts/chromectl.py list
    ```
 
 3. **Open a new tab:**
    ```bash
-   ./chromectl.py open https://example.com
+   scripts/chromectl.py open https://example.com
    # Output: {"id":"ABC123...","url":"https://example.com"}
    ```
 
 4. **Run JavaScript:**
    ```bash
-   ./chromectl.py eval --id ABC123 -e "document.title"
+   scripts/chromectl.py eval --id ABC123 -e "document.title"
    # Output: "Example Domain"
    ```
 
 5. **Stop Chrome when done (important!):**
    ```bash
-   ./chromectl.py stop
+   scripts/chromectl.py stop
    ```
 
    **⚠️ Always run `stop` when finished** to clean up Chrome processes and allow normal Chrome to launch from Finder.
@@ -93,7 +96,7 @@ That's it! On first run, `uv` will automatically install the required dependency
 ### `start` - Launch Chrome with debugging enabled
 
 ```bash
-./chromectl.py start [--headless] [--port PORT] [--chrome-app NAME] [--user-data-dir PATH]
+scripts/chromectl.py start [--headless] [--port PORT] [--chrome-app NAME] [--user-data-dir PATH]
 ```
 
 **Options:**
@@ -107,13 +110,13 @@ That's it! On first run, `uv` will automatically install the required dependency
 **Examples:**
 ```bash
 # Headless mode (recommended for automation)
-./chromectl.py start --headless
+scripts/chromectl.py start --headless
 
 # Visible Chrome window
-./chromectl.py start
+scripts/chromectl.py start
 
 # Use Chrome Canary
-./chromectl.py start --chrome-app "Google Chrome Canary"
+scripts/chromectl.py start --chrome-app "Google Chrome Canary"
 ```
 
 ---
@@ -121,7 +124,7 @@ That's it! On first run, `uv` will automatically install the required dependency
 ### `stop` - Stop all chromectl-managed Chrome instances
 
 ```bash
-./chromectl.py stop
+scripts/chromectl.py stop
 ```
 
 Finds and stops all Chrome instances launched by chromectl (identifies them by the chromectl profile directories).
@@ -147,7 +150,7 @@ Stopped 8 Chrome instance(s)
 ### `list` - List all open tabs/targets
 
 ```bash
-./chromectl.py list
+scripts/chromectl.py list
 ```
 
 Shows all available targets (tabs, extensions, service workers) with their IDs, URLs, and titles.
@@ -162,7 +165,7 @@ Shows all available targets (tabs, extensions, service workers) with their IDs, 
 ### `open` - Open a new tab
 
 ```bash
-./chromectl.py open <url>
+scripts/chromectl.py open <url>
 ```
 
 Opens a new tab at the specified URL and returns its target ID.
@@ -170,16 +173,16 @@ Opens a new tab at the specified URL and returns its target ID.
 **Examples:**
 ```bash
 # Open a website
-./chromectl.py open https://github.com
+scripts/chromectl.py open https://github.com
 
 # Open a data URL with inline HTML/JS
-./chromectl.py open "data:text/html,<h1>Hello</h1>"
+scripts/chromectl.py open "data:text/html,<h1>Hello</h1>"
 ```
 
 **Tip:** Save the target ID for use with other commands:
 ```bash
-TARGET=$(./chromectl.py open https://example.com | jq -r .id)
-./chromectl.py eval --id $TARGET -e "document.title"
+TARGET=$(scripts/chromectl.py open https://example.com | jq -r .id)
+scripts/chromectl.py eval --id $TARGET -e "document.title"
 ```
 
 ---
@@ -187,7 +190,7 @@ TARGET=$(./chromectl.py open https://example.com | jq -r .id)
 ### `eval` - Evaluate JavaScript
 
 ```bash
-./chromectl.py eval --id <target-id> -e <expression>
+scripts/chromectl.py eval --id <target-id> -e <expression>
 ```
 
 Executes JavaScript in the specified tab and returns the result.
@@ -200,19 +203,19 @@ Executes JavaScript in the specified tab and returns the result.
 **Examples:**
 ```bash
 # Get page title
-./chromectl.py eval --id ABC123 -e "document.title"
+scripts/chromectl.py eval --id ABC123 -e "document.title"
 
 # Get current URL
-./chromectl.py eval --id ABC123 -e "window.location.href"
+scripts/chromectl.py eval --id ABC123 -e "window.location.href"
 
 # Return an object
-./chromectl.py eval --id ABC123 -e "({title: document.title, url: location.href})"
+scripts/chromectl.py eval --id ABC123 -e "({title: document.title, url: location.href})"
 
 # Async operations work automatically
-./chromectl.py eval --id ABC123 -e "fetch('https://api.github.com').then(r => r.json())"
+scripts/chromectl.py eval --id ABC123 -e "fetch('https://api.github.com').then(r => r.json())"
 
 # DOM manipulation
-./chromectl.py eval --id ABC123 -e "document.querySelector('h1').innerText"
+scripts/chromectl.py eval --id ABC123 -e "document.querySelector('h1').innerText"
 ```
 
 ---
@@ -220,7 +223,7 @@ Executes JavaScript in the specified tab and returns the result.
 ### `screenshot` - Capture a PNG screenshot
 
 ```bash
-./chromectl.py screenshot --id <target-id> [-o output.png] [--full-page]
+scripts/chromectl.py screenshot --id <target-id> [-o output.png] [--full-page]
 ```
 
 **Options:**
@@ -230,10 +233,10 @@ Executes JavaScript in the specified tab and returns the result.
 **Examples:**
 ```bash
 # Viewport screenshot (visible area only)
-./chromectl.py screenshot --id ABC123 -o page.png
+scripts/chromectl.py screenshot --id ABC123 -o page.png
 
 # Full-page screenshot (entire scrollable content)
-./chromectl.py screenshot --id ABC123 -o fullpage.png --full-page
+scripts/chromectl.py screenshot --id ABC123 -o fullpage.png --full-page
 ```
 
 **Output:** Prints the filename when complete
@@ -246,7 +249,7 @@ page.png
 ### `console-tail` - Stream console messages
 
 ```bash
-./chromectl.py console-tail --id <target-id> [--for SECONDS]
+scripts/chromectl.py console-tail --id <target-id> [--for SECONDS]
 ```
 
 Streams console output from the specified tab in real-time.
@@ -266,19 +269,19 @@ Streams console output from the specified tab in real-time.
 **Usage pattern:**
 ```bash
 # Start tailing in the background
-./chromectl.py console-tail --id ABC123 --for 30 &
+scripts/chromectl.py console-tail --id ABC123 --for 30 &
 
 # Then interact with the page
-./chromectl.py eval --id ABC123 -e "console.log('Hello from eval')"
+scripts/chromectl.py eval --id ABC123 -e "console.log('Hello from eval')"
 ```
 
 **Example:** Monitor a page with active logging
 ```bash
 # Open a page that logs continuously
-./chromectl.py open "data:text/html,<script>setInterval(() => console.log('tick', Date.now()), 1000)</script>"
+scripts/chromectl.py open "data:text/html,<script>setInterval(() => console.log('tick', Date.now()), 1000)</script>"
 
 # Start monitoring (captures new messages for 10 seconds)
-./chromectl.py console-tail --id <target-id> --for 10
+scripts/chromectl.py console-tail --id <target-id> --for 10
 ```
 
 ---
@@ -296,19 +299,19 @@ Streams console output from the specified tab in real-time.
 You can run multiple Chrome instances simultaneously without closing your regular browser:
 ```bash
 # Instance 1 on port 9222
-./chromectl.py start --headless
+scripts/chromectl.py start --headless
 
 # Instance 2 on port 9223 (doesn't interfere with your regular Chrome)
-./chromectl.py start --headless --port 9223 --user-data-dir ~/chromectl-test
+scripts/chromectl.py start --headless --port 9223 --user-data-dir ~/chromectl-test
 
 # Use the second instance
-./chromectl.py --port 9223 list
+scripts/chromectl.py --port 9223 list
 ```
 
 ### Closing Chrome cleanly
 ```bash
 # Use the built-in stop command (recommended)
-./chromectl.py stop
+scripts/chromectl.py stop
 
 # Or manually close all Chrome instances
 killall "Google Chrome"
@@ -321,17 +324,17 @@ kill <PID>
 ### Chain commands with jq
 ```bash
 # Open, capture ID, and screenshot in one go
-TARGET=$(./chromectl.py open https://github.com | jq -r .id)
-./chromectl.py screenshot --id $TARGET -o github.png
+TARGET=$(scripts/chromectl.py open https://github.com | jq -r .id)
+scripts/chromectl.py screenshot --id $TARGET -o github.png
 ```
 
 ### Monitor console while running tests
 ```bash
 # Terminal 1: Start console monitoring
-./chromectl.py console-tail --id ABC123 --for 60
+scripts/chromectl.py console-tail --id ABC123 --for 60
 
 # Terminal 2: Run your automation
-./chromectl.py eval --id ABC123 -e "runTests()"
+scripts/chromectl.py eval --id ABC123 -e "runTests()"
 ```
 
 ### Debug connection issues
