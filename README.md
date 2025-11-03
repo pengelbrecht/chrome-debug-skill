@@ -1,6 +1,12 @@
-# chromectl
+# Chrome Debug Skill for Claude Code
 
-A single-file CLI for controlling Chrome via the Chrome DevTools Protocol (CDP), using **uv inline dependencies** — no `requirements.txt`, no manual venv, no setup required.
+A **Claude Code skill** and **standalone CLI tool** for controlling Chrome via the Chrome DevTools Protocol (CDP). Enables automated web app debugging, console monitoring, and screenshot capture.
+
+Built as a single-file Python script using **uv inline dependencies** — no `requirements.txt`, no manual venv, no setup required.
+
+**Use it as:**
+- 🤖 **Claude Code Skill** - Claude automatically debugs your web apps
+- 🛠️ **Standalone Tool** - Command-line Chrome automation via `chromectl.py`
 
 ## Features
 
@@ -10,7 +16,39 @@ A single-file CLI for controlling Chrome via the Chrome DevTools Protocol (CDP),
 - **Full-page screenshots**: Capture entire pages, not just the viewport
 - **Headless support**: Run Chrome in the background without a visible window
 
-## Installation
+## Install as Claude Code Skill
+
+**Want Claude to help debug your web apps automatically?** Install this as a skill for [Claude Code](https://claude.com/claude-code).
+
+### Quick Install
+
+```bash
+cd ~/.claude/skills
+git clone https://github.com/pengelbrecht/chrome-debug-skill.git chrome-debug
+```
+
+Then **restart Claude Code**.
+
+### What does the skill do?
+
+Once installed, Claude will automatically use this skill when you ask for help with:
+- "Debug why this page isn't loading correctly"
+- "Take a screenshot of https://example.com"
+- "Check the console for errors on my webapp"
+- "Monitor console output while I test my app"
+
+The skill enables **collaborative debugging** where Claude can:
+- Launch Chrome in visible mode (so you can interact with the page)
+- Monitor console errors in real-time
+- Capture screenshots to identify visual issues
+- Execute JavaScript to inspect page state
+- All while you navigate and test your application
+
+See [SKILL.md](SKILL.md) for complete skill documentation and workflows.
+
+---
+
+## Standalone Installation (Without Claude Code)
 
 Make the script executable:
 ```bash
